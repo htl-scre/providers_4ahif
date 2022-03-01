@@ -3,16 +3,25 @@ import 'package:provider/provider.dart';
 
 import '../providers/todos.dart';
 
-class Input extends StatelessWidget {
-  final controller = TextEditingController();
+class Input extends StatefulWidget {
 
   Input({Key? key}) : super(key: key);
+
+  @override
+  State<Input> createState() => _InputState();
+}
+
+class _InputState extends State<Input> {
+  final controller = TextEditingController();
+
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     final todos = Provider.of<Todos>(context, listen: false);
     return Form(
-      autovalidateMode: AutovalidateMode.always,
+      key:formKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -24,22 +33,22 @@ class Input extends StatelessWidget {
                 if (value == null || value.isEmpty) {
                   return 'Required';
                 }
+                if (value.length < 3) {
+                  return 'Too short';
+                }
                 return null;
               },
+              textInputAction: TextInputAction.,
               //onSubmitted: todos.addTodo,
             ),
           ),
           ElevatedButton(
             onPressed: () {
-              var formState = GlobalKey<FormState>();
+              var formState = formKey.currentState;
 
-              if (formState == null) {
-                throw 'no form';
-              }
-
-              if (formState.currentState != null &&
-                  formState.currentState!.validate()) {
+              if (formState!.validate()) {
                 todos.addTodo(controller.text);
+                formState.reset();
               }
             },
             child: const Text('Add'),
