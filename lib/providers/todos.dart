@@ -1,22 +1,38 @@
 import 'package:flutter/foundation.dart';
+import 'package:list/domain/todo.dart';
 
 class Todos with ChangeNotifier {
-  final _values = [
-    'flutter',
-    'provider',
-  ];
+  var _values = <Todo>[];
+  var initialized = false;
 
-  List<String> get values {
+  List<Todo> get all {
+    if (!initialized) {
+      getTodos();
+      initialized = true;
+    }
     return [..._values];
   }
 
-  void addTodo(String input) {
-    _values.add(input);
+  void getTodos() {
+    _values = [
+      Todo(description: 'flutter'),
+      Todo(description: 'provider'),
+    ];
+  }
+
+  void addTodo(String description) {
+    _values.add(Todo(description: description));
     notifyListeners();
   }
 
-  void removeTodo(String todo) {
-    _values.remove(todo);
+  void removeTodo(String id) {
+    _values.removeWhere((todo) => todo.id == id);
+    notifyListeners();
+  }
+
+  void toggleTodoDone(String id) {
+    final todo = _values.where((todo) => todo.id == id).single;
+    todo.done = !todo.done;
     notifyListeners();
   }
 }

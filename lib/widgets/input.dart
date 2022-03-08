@@ -38,7 +38,7 @@ class _InputState extends State<Input> {
                 }
                 return null;
               },
-              textInputAction: TextInputAction.,
+              textInputAction: TextInputAction.next,
               //onSubmitted: todos.addTodo,
             ),
           ),

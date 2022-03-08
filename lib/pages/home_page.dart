@@ -10,8 +10,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final todos = Provider.of<Todos>(context, listen: true);
-    //final text = todos.values;
+    final todos = Provider.of<Todos>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
           title: const Text(
@@ -25,15 +24,10 @@ class HomePage extends StatelessWidget {
         children: [
           Input(),
           Expanded(
-            child: Consumer<Todos>(
-              child: const Icon(Icons.contacts),//--v
-              builder: (_, todos, Widget?   child) {
-                return ListView(
-                  children: todos.values
-                      .map((todo) => TodoItem(todo, child!))
-                      .toList(),
-                );
-              },
+            child: ListView.builder(
+              itemBuilder: (_, index) =>
+                  TodoItem(todos.all[index].description, todos.all[index].id, todos.all[index].done),
+              itemCount: todos.all.length,
             ),
           ),
         ],

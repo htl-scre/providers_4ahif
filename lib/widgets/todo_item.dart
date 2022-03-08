@@ -4,20 +4,19 @@ import 'package:provider/provider.dart';
 import '../providers/todos.dart';
 
 class TodoItem extends StatelessWidget {
-  final String todo;
-  final Widget leading;
+  final String description;
+  final String id;
+  final bool done;
 
-  const TodoItem(this.todo, this.leading, {Key? key}) : super(key: key);
+  const TodoItem(this.description, this.id, this.done, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var todos = Provider.of<Todos>(context, listen: false);
     return Dismissible(
-      key: GlobalKey(),
+      key: ValueKey(id),
       onDismissed: (_) {
-        var todos = Provider.of<Todos>(context, listen: false);
-        todos
-            .removeTodo(todo);
-        print(todos.values);
+        todos.removeTodo(id);
       },
       background: Container(
         height: 80,
@@ -25,8 +24,9 @@ class TodoItem extends StatelessWidget {
         color: Theme.of(context).colorScheme.primary,
       ),
       child: ListTile(
-        title: Text(todo),
-        leading: leading,
+        title: Text(description),
+        leading: Icon(done ? Icons.check_circle_outline : Icons.circle),
+        onTap: () => todos.toggleTodoDone(id),
       ),
     );
   }
