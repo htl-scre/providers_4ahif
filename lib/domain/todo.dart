@@ -1,18 +1,30 @@
 class Todo {
-  final String id;
+  String? id;
   final String description;
   bool done;
-  static var lastId = '-';
 
   Todo({
+    this.id,
     required this.description,
     this.done = false,
-  }) : id = lastId {
-    lastId += '-';
-  }
+  });
+
+  Todo.fromJson(Map<String, dynamic> json, String id)
+      : this(
+          id: id,
+          description: json['description'],
+          done: json['done'],
+        );
 
   @override
   String toString() {
     return 'Todo{id: $id, description: $description, done: $done}';
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'description': description,
+      'done': done,
+    };
   }
 }

@@ -8,7 +8,8 @@ class TodoItem extends StatelessWidget {
   final String id;
   final bool done;
 
-  const TodoItem(this.description, this.id, this.done, {Key? key}) : super(key: key);
+  const TodoItem(this.description, this.id, this.done, {Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,15 @@ class TodoItem extends StatelessWidget {
       child: ListTile(
         title: Text(description),
         leading: Icon(done ? Icons.check_circle_outline : Icons.circle),
-        onTap: () => todos.toggleTodoDone(id),
+        onTap: () async {
+          try {
+            await todos.toggleTodoDone(id);
+          } catch (error) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('$error')),
+            );
+          }
+        },
       ),
     );
   }
